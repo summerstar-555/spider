@@ -86,18 +86,23 @@ print(r.text)
 #     print(each)
 #
 # con = selector.xpath('/html/body/div/a/@title')  # 使用绝对路径�20 <a href="http:www.csdn.2Fa/@title') #使用相对路径定位 两者效果是一样的
-# print(len(con))
+# print(nums(con))
 # print(con[0] + con[1])
 
 # 尝试获取wallhaven的图片
 import requests
 from lxml import etree
-path = '//*[@id="featured"]/div[2]/span[1]/a/@href'  # 图片的xPath路径
-url = 'https://wallhaven.cc/'   # 网址
+
+i = 1  # 保存图片时的序号
+path = '//*[@id="featured"]/div[2]/span[1]/a/@href'  # 图片大屏的路径，大屏指分辨率会更高
+url = 'https://wallhaven.cc/'  # 网址
+desk_path = r"D:/SummerStar/Desktop/"
 r = requests.get(url)
 e = etree.HTML(r.text)
-link = e.xpath(path)    # 图片链接
-i = 1
+links = e.xpath(path)
+e = etree.HTML(requests.get(links[0]).text)
+path = '//*[@id="wallpaper"]/@src'
+links = e.xpath(path)
 with open(f'./Pictures/picture({i}).jpg', 'wb') as f:
-    data = requests.get(link[0])
-    f.write(data.content)
+    link = requests.get(links[0])
+    f.write(link.content)
