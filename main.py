@@ -89,20 +89,63 @@ print(r.text)
 # print(nums(con))
 # print(con[0] + con[1])
 
-# 尝试获取wallhaven的图片
+# 获取wallhaven的图片
+import os
 import requests
 from lxml import etree
+def print_tags():
+    url = 'https://wallhaven.cc/'
+    tags_xpath = '//*[@id="featured"]/div[1]/span'  #
+    i = 1
+    tags_list = []
+    while i < 20:
+        tags_xpath = f'//*[@id="featured"]/div[1]/span[{i}]/a/text()'
+        r = requests.get(url)
+        if r.status_code == 200:
+            print("网站连接失败！")
+        else:
+            print("连接成功！")
+        e = etree.HTML(r.text)
+        value = e.xpath(tags_xpath)  # 所有的标签
+        if value:
+            tags_list.append([value[0]])
+        i = i + 1
+    print("这些是推荐的热搜标签：", end='')
+    for j in tags_list:
+        print('#'+j[0]+' ', end='')
 
-i = 1  # 保存图片时的序号
-path = '//*[@id="featured"]/div[2]/span[1]/a/@href'  # 图片大屏的路径，大屏指分辨率会更高
-url = 'https://wallhaven.cc/'  # 网址
-desk_path = r"D:/SummerStar/Desktop/"
-r = requests.get(url)
-e = etree.HTML(r.text)
-links = e.xpath(path)
-e = etree.HTML(requests.get(links[0]).text)
-path = '//*[@id="wallpaper"]/@src'
-links = e.xpath(path)
-with open(f'./Pictures/picture({i}).jpg', 'wb') as f:
-    link = requests.get(links[0])
-    f.write(link.content)
+
+def image_link_process(image_link: str) -> str:
+    # https://w.wallhaven.cc/full/rd/wallhaven-rddgwm.jpg
+    # https://th.wallhaven.cc/small/rd/rddgwm.jpg
+    if "small" in image_link:
+        image_link = image_link.replace("th", "w")
+        image_link = image_link.replace("small", "full")
+        url_path = image_link.split("/")
+        url_path[-1] = f"wallhaven-{url_path[-1]}"
+        return "/".join(url_path)
+    return ""
+
+
+print_tags()        # 输出标签
+while 1:
+    tag = input("\n请输入想搜索的内容标签：")
+    url = f'https://wallhaven.cc/search?q={tag}'
+    small_xpath = '//img[@alt="loading"]/@data-src'  # 小图片的xpath路径
+    r = requests.get(url)
+    e = etree.HTML(r.text)
+    small_list = e.xpath(small_xpath)
+    pic_path = f'./Pictures/{tag}/'
+    if not os.path.exists(pic_path):
+        os.mkdir(pic_path)
+    j = 1
+    for link in small_list:
+        full_pic = image_link_process(link)  # 全屏壁纸
+        fullpic_resp = requests.get(full_pic)
+        with open(f'./Pictures/{tag}/{j}.jpg', 'wb') as f:
+            f.write(fullpic_resp.content)
+        j = j + 1
+    answer = input("是否退出")
+    if answer == '是':
+        break
+
