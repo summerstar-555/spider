@@ -140,7 +140,7 @@ while 1:
             print(f"找不到图片！({i})")
         else:
             j = j + 1
-            print(f'下载成功{j}')
+            print(f'下载成功({j})')
             with open(f'./Pictures/{tag}/%s.jpg' % time.time(), 'wb') as f:  # 使用时间戳命名
                 f.write(fullpic_resp.content)
     print(f"一共下载了{j}张图片，下载失败的图片一共有{i}张")
