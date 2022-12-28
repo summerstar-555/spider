@@ -93,26 +93,18 @@ print(r.text)
 import os
 import requests
 from lxml import etree
-def print_tags():
-    url = 'https://wallhaven.cc/'
-    tags_xpath = '//*[@id="featured"]/div[1]/span'  #
-    i = 1
-    tags_list = []
-    while i < 20:
-        tags_xpath = f'//*[@id="featured"]/div[1]/span[{i}]/a/text()'
-        r = requests.get(url)
-        if r.status_code == 200:
-            print("网站连接失败！")
-        else:
-            print("连接成功！")
-        e = etree.HTML(r.text)
-        value = e.xpath(tags_xpath)  # 所有的标签
-        if value:
-            tags_list.append([value[0]])
-        i = i + 1
-    print("这些是推荐的热搜标签：", end='')
-    for j in tags_list:
-        print('#'+j[0]+' ', end='')
+import time
+
+
+def print_tags():  # 输出标签
+    wallhaven_url = 'https://wallhaven.cc/'
+    tags_xpath = '//a[@class="tagname sfw"]/text()'
+    resp = requests.get(wallhaven_url)
+    element = etree.HTML(resp.text)
+    list1 = element.xpath(tags_xpath)
+    for tag_content in list1:
+        tag_content = '#' + tag_content
+        print(f"\033[0;36;40m{tag_content}\033[0m", end='  ')  # 改变字体的前景色和背景色
 
 
 def image_link_process(image_link: str) -> str:
@@ -127,25 +119,31 @@ def image_link_process(image_link: str) -> str:
     return ""
 
 
-print_tags()        # 输出标签
+print_tags()  # 输出标签
 while 1:
     tag = input("\n请输入想搜索的内容标签：")
     url = f'https://wallhaven.cc/search?q={tag}'
     small_xpath = '//img[@alt="loading"]/@data-src'  # 小图片的xpath路径
+    i = 0
+    j = 0
     r = requests.get(url)
     e = etree.HTML(r.text)
-    small_list = e.xpath(small_xpath)
-    pic_path = f'./Pictures/{tag}/'
-    if not os.path.exists(pic_path):
+    small_list = e.xpath(small_xpath)  # 获取一页小图片的链接
+    pic_path = f'./Pictures/{tag}/'  # 根据用户输入的标签进行创建文件夹
+    if not os.path.exists(pic_path):  # 检查是否存在
         os.mkdir(pic_path)
-    j = 1
     for link in small_list:
         full_pic = image_link_process(link)  # 全屏壁纸
         fullpic_resp = requests.get(full_pic)
-        with open(f'./Pictures/{tag}/{j}.jpg', 'wb') as f:
-            f.write(fullpic_resp.content)
-        j = j + 1
-    answer = input("是否退出")
+        if not fullpic_resp.status_code == 200:
+            i = i + 1
+            print(f"找不到图片！({i})")
+        else:
+            j = j + 1
+            print(f'下载成功{j}')
+            with open(f'./Pictures/{tag}/%s.jpg' % time.time(), 'wb') as f:  # 使用时间戳命名
+                f.write(fullpic_resp.content)
+    print(f"一共下载了{j}张图片，下载失败的图片一共有{i}张")
+    answer = input("是否退出:")
     if answer == '是':
         break
-
