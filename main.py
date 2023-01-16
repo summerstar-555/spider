@@ -19,6 +19,7 @@ r.encoding = r.apparent_encoding
 # 改变编码格式变成中文
 print(r.text)
 """
+import requests
 
 # import requests
 # # get()获取网页
@@ -103,6 +104,7 @@ print(html)
 
 # timeout参数
 # 使用get方法长时间无响应，设置timeout参数
+"""
 import requests
 
 url = 'https://wallhaven.cc/'
@@ -111,3 +113,47 @@ try:
     print(resp.status_code)
 except requests.exceptions.ConnectTimeout:
     print('连接超时')
+"""
+
+# 乱码问题 - 解决方案
+'''
+import requests
+url = 'https://www.baidu.com/'
+resp = requests.get(url)
+print(resp.text.encode('utf-8'))        # 把字符串编译成'utf-8'的形式
+print('-'*100)
+print(resp.content.decode('utf-8'))     # 把字节按'utf-8'的形式解码
+'''
+
+
+# request的get方法传递参数
+'''
+def fun1():
+    url = 'https://wallhaven.cc/search'
+    parameter = {
+        'q': 'id:123704',       # 这里不能跟着写%3A，因为这个相当于':'符号
+        'categories': '111',
+        'purity': '100',
+        'sorting': 'random',
+        'order': 'desc',
+        'seed': 'lZkF6z',
+        'page': '2'
+    }
+    resp = requests.get(url, params=parameter)
+    # 使用params之后会在网址后面先添加一个'?',然后在进行填写参数
+    # 所以可以将网址'？'前面的内容复制，然后再使用params填写相应的参数
+    print(resp.url)
+    # 等同于‘url = 'https://wallhaven.cc/search?q=id%3A123704&categories=111&purity=100&sorting=random&order=desc&seed
+    # =lZkF6z&page=2'’
+    resp.close()
+
+
+def fun2():
+    url = 'https://wallhaven.cc/search?q=id%3A123704&categories=111&purity=100&sorting=random&order=desc&seed=lZkF6z&page=2'
+    resp = requests.get(url)
+    resp.close()
+
+
+fun1()
+fun2()
+'''
