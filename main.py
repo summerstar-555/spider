@@ -125,7 +125,6 @@ print('-'*100)
 print(resp.content.decode('utf-8'))     # 把字节按'utf-8'的形式解码
 '''
 
-
 # request的get方法传递参数
 '''
 def fun1():
@@ -156,4 +155,30 @@ def fun2():
 
 fun1()
 fun2()
+'''
+
+# 导入RequestException异常，这个异常基本上是爬取过程中所有的错误来源
+'''
+import requests
+from requests.exceptions import RequestException
+
+
+def get_one_page(url):
+    response = requests.get(url)
+    try:
+        if response.status_code == 200:
+            return response.text
+        return None
+    except RequestException:
+        return None
+
+
+def main():
+    url = 'http://maoyan.com/board/4'
+    html = get_one_page(url)
+    print(html)
+
+
+if __name__ == '__main__':
+    main()
 '''
