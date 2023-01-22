@@ -182,3 +182,16 @@ def main():
 if __name__ == '__main__':
     main()
 '''
+
+# url解析
+url = 'https%3A%2F%2Fkh4.psdcat.com%2Fplaym3u8%2F1674016397_aabbcc05_WuLiuQiS401.m3u8'
+
+
+def parse(url_fuc: str):
+    url_fuc = url_fuc.replace('%3A', ':')
+    url_fuc = url_fuc.replace('%2F', '/')
+    return url_fuc
+
+
+url = parse(url)
+print(url)
