@@ -1,7 +1,7 @@
 """
 import requests
 # get()获取网页
-r = requests.get('https://www.baidu.com')   # r是一个<class 'requests.models.Response'>对象
+r = requests.get('https://www.baidu.com')   # r是一个'Response'对象
 # 检查连接状态
 print(r.status_code)                        # 200表示正常连接，非200即失败
 # 检测r的类型
@@ -19,28 +19,30 @@ r.encoding = r.apparent_encoding
 # 改变编码格式变成中文
 print(r.text)
 """
-import requests
 
-# import requests
-# # get()获取网页
-# from lxml import html
-# etree = html.etree
-# path = "/html/body/main/div[1]/section/ul/li[1]/figure/a[2]/@href"  # 图片的xPath路径
-# r = requests.get('https://wallhaven.cc/search?q'
-#                  '=id:1394&sorting=random&ref=fp')   # r是一个<class 'requests.models.Response'>对象
-# """
-# # 检查连接状态
-# if r.status_code == 200:
-#     print("连接成功！")
-# else:
-#     print("连接失败")
-# """
-# e1 = etree.HTML(r.text)
-# print(e1.xpath(path))
-# # print("网页编码为：", r.encoding)ink)
+
+# 基础知识
+"""
+import requests
+# get()获取网页
+from lxml import html
+etree = html.etree
+path = "/html/body/main/div[1]/section/ul/li[1]/figure/a[2]/@href"  # 图片的xPath路径
+r = requests.get('https://wallhaven.cc/search?q'
+                 '=id:1394&sorting=random&ref=fp')   # r是一个'Response'对象
+                 
+# 检查连接状态
+if r.status_code == 200:
+    print("连接成功！")
+else:
+    print("连接失败")
+e1 = etree.HTML(r.text)
+print(e1.xpath(path))
+# print("网页编码为：", r.encoding)ink)
+"""
+
 
 # 实例练习
-
 # from lxml import etree
 #
 # html = """
@@ -90,6 +92,7 @@ import requests
 # print(nums(con))
 # print(con[0] + con[1])
 
+
 # 反爬虫，修改UA
 # 导入模块
 """
@@ -101,6 +104,7 @@ headers = {
 html = requests.get(url, headers=headers).text
 print(html)
 """
+
 
 # timeout参数
 # 使用get方法长时间无响应，设置timeout参数
@@ -115,6 +119,7 @@ except requests.exceptions.ConnectTimeout:
     print('连接超时')
 """
 
+
 # 乱码问题 - 解决方案
 '''
 import requests
@@ -124,6 +129,7 @@ print(resp.text.encode('utf-8'))        # 把字符串编译成'utf-8'的形式
 print('-'*100)
 print(resp.content.decode('utf-8'))     # 把字节按'utf-8'的形式解码
 '''
+
 
 # request的get方法传递参数
 '''
@@ -157,6 +163,7 @@ fun1()
 fun2()
 '''
 
+
 # 导入RequestException异常，这个异常基本上是爬取过程中所有的错误来源
 '''
 import requests
@@ -183,7 +190,9 @@ if __name__ == '__main__':
     main()
 '''
 
+
 # url解析
+'''
 url = 'https%3A%2F%2Fkh4.psdcat.com%2Fplaym3u8%2F1674016397_aabbcc05_WuLiuQiS401.m3u8'
 
 
@@ -195,3 +204,5 @@ def parse(url_fuc: str):
 
 url = parse(url)
 print(url)
+'''
+
