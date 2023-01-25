@@ -20,7 +20,6 @@ r.encoding = r.apparent_encoding
 print(r.text)
 """
 
-
 # 基础知识
 """
 import requests
@@ -40,7 +39,6 @@ e1 = etree.HTML(r.text)
 print(e1.xpath(path))
 # print("网页编码为：", r.encoding)ink)
 """
-
 
 # 实例练习
 # from lxml import etree
@@ -105,7 +103,6 @@ html = requests.get(url, headers=headers).text
 print(html)
 """
 
-
 # timeout参数
 # 使用get方法长时间无响应，设置timeout参数
 """
@@ -119,7 +116,6 @@ except requests.exceptions.ConnectTimeout:
     print('连接超时')
 """
 
-
 # 乱码问题 - 解决方案
 '''
 import requests
@@ -129,7 +125,6 @@ print(resp.text.encode('utf-8'))        # 把字符串编译成'utf-8'的形式
 print('-'*100)
 print(resp.content.decode('utf-8'))     # 把字节按'utf-8'的形式解码
 '''
-
 
 # request的get方法传递参数
 '''
@@ -163,7 +158,6 @@ fun1()
 fun2()
 '''
 
-
 # 导入RequestException异常，这个异常基本上是爬取过程中所有的错误来源
 '''
 import requests
@@ -190,7 +184,6 @@ if __name__ == '__main__':
     main()
 '''
 
-
 # url解析
 '''
 url = 'https%3A%2F%2Fkh4.psdcat.com%2Fplaym3u8%2F1674016397_aabbcc05_WuLiuQiS401.m3u8'
@@ -206,3 +199,18 @@ url = parse(url)
 print(url)
 '''
 
+
+# 使用session方法，能够带上cookie，但这个cookie是可以明文查看的
+# 如果使用get方法，则需要去网站复制自己的cookie，然后再放在头部
+'''
+import requests
+
+url = 'https://passport.17k.com/ck/user/login'
+session = requests.session()
+data = {
+    "loginname": "********",
+    "password": "*********"}
+session.post(url, data=data)
+resp = session.get('https://passport.17k.com/ck/user/login')
+print(resp.json())
+'''
