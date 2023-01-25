@@ -206,11 +206,24 @@ print(url)
 import requests
 
 url = 'https://passport.17k.com/ck/user/login'
-session = requests.session()
+session = requests.session()        # 返回一个session对象，这个对象会一直带着cookie
 data = {
     "loginname": "********",
     "password": "*********"}
 session.post(url, data=data)
 resp = session.get('https://passport.17k.com/ck/user/login')
 print(resp.json())
+'''
+
+
+# 流式下载
+'''
+import requests
+import os
+url = 'https://video.pearvideo.com/head/20230113/cont-1718750-15952493.mp4'   # 视频的真正下载地址
+file_name = os.path.split(url)[1]       # 获取文件名
+resp = requests.get(url, stream=True)       # 使用流式下载
+with open(f'./{file_name}', 'wb') as f:
+    for chunk in resp.iter_content(chunk_size=1024):  # 一次从迭代器内部拿出1024个字节
+        f.write(chunk)
 '''
