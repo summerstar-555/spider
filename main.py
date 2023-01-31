@@ -199,7 +199,6 @@ url = parse(url)
 print(url)
 '''
 
-
 # 使用session方法，能够带上cookie，但这个cookie是可以明文查看的
 # 如果使用get方法，则需要去网站复制自己的cookie，然后再放在头部
 '''
@@ -215,7 +214,6 @@ resp = session.get('https://passport.17k.com/ck/user/login')
 print(resp.json())
 '''
 
-
 # 流式下载
 '''
 import requests
@@ -227,3 +225,23 @@ with open(f'./{file_name}', 'wb') as f:
     for chunk in resp.iter_content(chunk_size=1024):  # 一次从迭代器内部拿出1024个字节
         f.write(chunk)
 '''
+
+# 代理，可解决多次请求导致的408 详细资料 - https://zhuanlan.zhihu.com/p/79466893
+"""
+import requests
+
+url = 'https://www.baidu.com/'
+proxies = {
+    'http': 'http://10.10.1.10:3128'  # 如果http值没有加上协议，也就是没有加上http://这个东西的话会自动加上http协议
+}
+resp = requests.get(url, proxies=proxies)
+resp.encoding = 'utf-8'
+print(resp.text)
+"""
+'''
+结论
+1.Requests 会按照目标url的协议来为它配置代理。基于此你可以为不同的协议甚至不同域名设置不同的代理，如果想为所有请求使用同一个代理，那直接使用 all 作为 key 来设置即可。
+2.代理地址如果没有指明协议，则默认使用 http 请求。
+'''
+
+
